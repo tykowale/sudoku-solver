@@ -51,22 +51,17 @@ class SudokuSolver
     p @row_possible
   end
 
-
-# This is currently not working but I want it to function similar to the row check
-# but it is a little bit harder since you have to account got not looping over
-# an array, but instead a bunch of individual digits. Is there a way to transpose
-# so it switches them around to make it easier?
-  # def col_possibilities
-  #   @col_possible = Array.new(9) {Array(1..9).to_a}
-  #   9.times do |row|
-  #     @col_possible.each_index do |col|
-  #       @col_possible[col] = @col_possible[col] - (@board[row][col] & @col_possible[row][col])
-  #     end
-  #   end
-  #   p @col_possible
-  # end
+  def col_possibilities
+    @col_possible = Array.new(9) {Array(1..9).to_a}
+    9.times do |col|
+      @col_possible.each_index do |row|
+        @col_possible[col] = @col_possible[col] - (Array(@board[row][col]) & @col_possible[col])
+      end
+    end
+    p @col_possible
+  end
 
 end
 
-# SudokuSolver.new.col_possibilities
-SudokuSolver.new.row_possibilities
+SudokuSolver.new.col_possibilities
+# SudokuSolver.new.row_possibilities
