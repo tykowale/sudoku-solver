@@ -93,11 +93,28 @@ class SudokuSolver
     #     next
     #have counter going to make sure at least one thing is changed per go around,
     #if not end it and say it can't be solved
+  end
 
+  def spot_possible(row, column)  #checks possible solutions for specific spot on board
+    @possibilities = (@row_possible[row] & @col_possible[column] & @box_possible[box_number(row,column)])
+
+    if @board[row][column] != 0  #if spot isn't empty... 
+      return @board[row][column] = @board[row][column]  #returns itself
+    elsif @possibilities.length == 1
+      @board[row][column] = @possibilities
+      return @board[row][column]
+    else 
+      return @possibilities #prints numbers that are possible for row, column, box
+    end 
 
   end
 
 end
+
+game = SudokuSolver.new
+
+p game.spot_possible(0,0) == 5
+p game.spot_possible(0,2) == [1,2,3]  #=> I solved this and the solution here is 3.  we need to check this array against other rows now to get rid of the 1 and 2
 
 
 # Here is where I am calling it quits for the night. If you decide to pick up
@@ -109,16 +126,29 @@ end
 # 2. Change the naming to make more sense
 # 3. Clean up the initialize statement and seperate it into a builder function?
 
-game = SudokuSolver.new
 
-puts 'board'
-p game.board
-puts
-puts 'Column'
-p game.col_possible
-puts
-puts 'Row'
-p game.row_possible
-puts
-puts 'Box'
-p game.box_possible
+
+# puts 'board'
+# p game.board
+# puts
+
+# puts 'Column'
+# p game.col_possible
+# puts
+
+# puts 'Row'
+# p game.row_possible
+# puts
+
+# puts 'Box'
+# p game.box_possible
+# puts
+
+
+
+
+
+
+
+
+
