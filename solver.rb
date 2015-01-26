@@ -20,7 +20,9 @@
 # (3/3)*3 + (5/3)
 # (1*3) + 1 = 4
 
-
+def new_method(one)
+  puts 'yup'
+end
 
 class SudokuSolver
   attr_reader :board, :col_possible, :row_possible, :box_possible
@@ -122,18 +124,18 @@ class SudokuSolver
 
 end
 
-def foo
-  puts "this is a test for git"
-end
+# def foo
+#   puts "this is a test for git"
+# end
 
-game = SudokuSolver.new
-p game.row_possible
-1000.times {game.solver}
-p game.row_possible
-p game.col_possible[8]
-p game.box_possible[5]
-p game.spot_possible(0,0) == 5
-p game.spot_possible(0,2) == [1,2,3]  #=> I solved this and the solution here is 3.  we need to check this array against other rows now to get rid of the 1 and 2
+# game = SudokuSolver.new
+# p game.row_possible
+# 1000.times {game.solver}
+# p game.row_possible
+# p game.col_possible[8]
+# p game.box_possible[5]
+# p game.spot_possible(0,0) == 5
+# p game.spot_possible(0,2) == [1,2,3]  #=> I solved this and the solution here is 3.  we need to check this array against other rows now to get rid of the 1 and 2
 p game.board
 
 # Here is where I am calling it quits for the night. If you decide to pick up
