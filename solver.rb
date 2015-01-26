@@ -79,8 +79,17 @@ class SudokuSolver
     @box_num = ((row / 3) * 3 ) + (column / 3)
   end
 
-
 end
+
+
+# Here is where I am calling it quits for the night. If you decide to pick up
+# everything is working as is intended right now but the changes I need to make for
+# reusability and clarity purposes for what is written are as follows -
+# 1. Change the function structure
+#   Have an array_possibilites builder function
+#   Have a row_check, column_check, box_check function
+# 2. Change the naming to make more sense
+# 3. Clean up the initialize statement and seperate it into a builder function?
 
 game = SudokuSolver.new
 
