@@ -102,21 +102,32 @@ class SudokuSolver
     if @board[row][column] != 0  #if spot isn't empty...
       return @board[row][column] = @board[row][column]  #returns itself
     elsif @possibilities.length == 1
-      @board[row][column] = @possibilities
+      @board[row][column] = @possibilities[0]
+      row_checker
+      col_checker
+      box_checker
       return @board[row][column]
     else
       return @possibilities #prints numbers that are possible for row, column, box
     end
   end
 
+  def solver
+    9.times do |row|
+      9.times do |col|
+        spot_possible(row, col)
+      end
+    end
+  end
 
 end
 
 game = SudokuSolver.new
+100.times {game.solver}
 
 p game.spot_possible(0,0) == 5
 p game.spot_possible(0,2) == [1,2,3]  #=> I solved this and the solution here is 3.  we need to check this array against other rows now to get rid of the 1 and 2
-
+p game.board
 
 # Here is where I am calling it quits for the night. If you decide to pick up
 # everything is working as is intended right now but the changes I need to make for
