@@ -32,6 +32,7 @@ class SudokuSolver
       line.gsub!('+', '')
       line.gsub!('-', '')
       line.gsub!('|', '')
+      line.gsub!('     ', '000')
       line.gsub!('  ', '0')
       line.gsub!(/\s+/, '')
     end
@@ -83,19 +84,28 @@ class SudokuSolver
   end
 
   def reduce
-    #row.each_index
-    # col.each_index
-    #   if (row_possible & col_possible & box_possible).size == 1
-    #     @board[r][c] is that number
-    #   else if (row_possible & col_possible & box_possible).size == 1
-    #     games impossible and break
-    #   else
-    #     next
-    #have counter going to make sure at least one thing is changed per go around,
-    #if not end it and say it can't be solved
-
-
+    9.times do |row|
+      9.times do |col|
+        if @board[row][col] == 0
+          if (@row_possible[row] & @col_possible[col] & @box_possible[box_number(row, col)]).size == 1
+            @board[row][col] = (@row_possible[row] & @col_possible[col] & @box_possible[box_number(row, col)])[0]
+            row_checker
+            col_checker
+            box_checker
+          else
+            next
+          end
+        end
+      end
+    end
   end
+
+  def solver
+    solved = false
+    1000.times {reduce}
+  end
+
+
 
 end
 
@@ -122,3 +132,6 @@ p game.row_possible
 puts
 puts 'Box'
 p game.box_possible
+game.solver
+puts
+p game.board
