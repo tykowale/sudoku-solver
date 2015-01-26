@@ -23,7 +23,7 @@
 
 
 class SudokuSolver
-  attr_reader :board
+  attr_reader :board, :col_possible, :row_possible, :box_possible
 
   def initialize
     f = File.open("./sudoku.txt")
@@ -42,41 +42,59 @@ class SudokuSolver
         @board.push(line.chars.map(&:to_i))
       end
     end
+    array_possibilities
   end
 
-  def row_possibilities
-    #builds arrays that will match up with rows but be their opposite
+  def array_possibilities
     @row_possible = Array.new(9) {Array(1..9).to_a}
+    @col_possible = Array.new(9) {Array(1..9).to_a}
+    @box_possible = Array.new(9) {Array(1..9).to_a}
+    row_checker
+    col_checker
+    box_checker
+  end
+
+  def row_checker
     @row_possible.each_index do |row|
       @row_possible[row] = @row_possible[row] - (@board[row] & @row_possible[row])
     end
-    p @row_possible
   end
 
 
-  def col_possibilities
-    @col_possible = Array.new(9) {Array(1..9).to_a}
+  def col_checker
     9.times do |row|
       @col_possible.each_index do |col|
         @col_possible[col] = @col_possible[col] - (Array(@board[row][col]) & @col_possible[col])
       end
     end
-    p @col_possible
   end
 
 
-  def box_possibilities
-    @box_possible = Array.new(9) {Array(1..9).to_a}
+  def box_checker
     9.times do |row|
       @box_possible.each_index do |col|
         @box_possible[box_number(row, col)] = @box_possible[box_number(row, col)] - (Array(@board[row][col]) & @box_possible[box_number(row, col)])
       end
     end
-    p @box_possible
   end
 
   def box_number(row, column)
     @box_num = ((row / 3) * 3 ) + (column / 3)
+  end
+
+  def reduce
+    #row.each_index
+    # col.each_index
+    #   if (row_possible & col_possible & box_possible).size == 1
+    #     @board[r][c] is that number
+    #   else if (row_possible & col_possible & box_possible).size == 1
+    #     games impossible and break
+    #   else
+    #     next
+    #have counter going to make sure at least one thing is changed per go around,
+    #if not end it and say it can't be solved
+
+
   end
 
 end
@@ -97,10 +115,10 @@ puts 'board'
 p game.board
 puts
 puts 'Column'
-game.col_possibilities
+p game.col_possible
 puts
 puts 'Row'
-game.row_possibilities
+p game.row_possible
 puts
 puts 'Box'
-game.box_possibilities
+p game.box_possible
