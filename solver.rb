@@ -142,6 +142,16 @@ def bar
   puts "test 2"
 end
 
+def baz
+  puts "test 3"
+end
+
+def foobarbaz
+  puts "test4"
+end
+
+#testing chase_branch
+
 game = SudokuSolver.new
 p game.row_possible
 1000.times {game.solver}
