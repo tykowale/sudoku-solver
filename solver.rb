@@ -130,6 +130,10 @@ def bar
   puts "test 2"
 end
 
+def baz
+  puts "test 3"
+end
+
 #testing chase_branch
 
 game = SudokuSolver.new
