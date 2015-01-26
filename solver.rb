@@ -50,7 +50,7 @@ class SudokuSolver
   end
 
   def row_possibilities
-    #builds arrays that has all will match up with rows
+    #builds arrays that will match up with rows but be their opposite
     @row_possible = Array.new(9) {Array(1..9).to_a}
     row_checker
     p @row_possible
