@@ -33,7 +33,7 @@ class SudokuSolver
       line.gsub!('-', '')
       line.gsub!('|', '')
       line.gsub!('  ', '0')
-      line.gsub!(/\s+/, "")
+      line.gsub!(/\s+/, '')
     end
 
     @board = []
@@ -53,9 +53,7 @@ class SudokuSolver
     p @row_possible
   end
 
-# So this is some shit... It works most of the time but there are a few columns where
-# it doesn't work properly. I can't figure that out right now but it is really bugging
-# me.
+
   def col_possibilities
     @col_possible = Array.new(9) {Array(1..9).to_a}
     9.times do |row|
@@ -66,11 +64,7 @@ class SudokuSolver
     p @col_possible
   end
 
-#This motherfucker right here....
-# Look above to check out the formula to take in each (row, column) cordinate to figure
-# out which box it belongs in and how to reduce it from there. It works for like
-# half the boxes which I think is either an issue how the formula is working or
-# when converting the item to an array
+
   def box_possibilities
     @box_possible = Array.new(9) {Array(1..9).to_a}
     9.times do |row|
