@@ -65,15 +65,15 @@ class SudokuSolver
 # Look above to check out the formula to take in each (row, column) cordinate to figure
 # out which box it belongs in and how to reduce it from there. I cant really figure
 # it out and I'm gonna call this it for now...
-  # def box_possibilities
-  #   @box_possible = Array.new(9) {Array(1..9).to_a}
-  #   9.times do |col|
-  #     @box_possible.each_index do |row|
-  #       @box_possible[box_number(row, col)] = @col_possible[col] - (Array(@board[row][col]) & @col_possible[col])
-  #     end
-  #   end
-  #   p @box_possible
-  # end
+  def box_possibilities
+    @box_possible = Array.new(9) {Array(1..9).to_a}
+    9.times do |col|
+      @box_possible.each_index do |row|
+        @box_possible[box_number(row, col)] = @box_possible[col] - (Array(@board[row][col]) & @box_possible[col])
+      end
+    end
+    p @box_possible
+  end
 
   def box_number(row, column)
     @box_num = ((row % 3) * 3 ) + (column % 3)
@@ -82,7 +82,7 @@ class SudokuSolver
 
 end
 
-SudokuSolver.new.col_possibilities
-puts
-SudokuSolver.new.row_possibilities
-# SudokuSolver.new.box_possibilities
+# SudokuSolver.new.col_possibilities
+# puts
+# SudokuSolver.new.row_possibilities
+SudokuSolver.new.box_possibilities
