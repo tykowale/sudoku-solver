@@ -107,13 +107,7 @@ class SudokuSolver
     else
       return @possibilities #prints numbers that are possible for row, column, box
     end
-
-
-  def solver
-    solved = false
-    1000.times {reduce}
   end
-
 
 
 end
