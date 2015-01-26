@@ -42,17 +42,12 @@ class SudokuSolver
     end
   end
 
-  def row_checker
-    #Checks if a number is in a row and removes it from the possibilities array
-    @row_possible.each_index do |row|
-      @row_possible[row] = @row_possible[row] - (@board[row] & @row_possible[row])
-    end
-  end
-
   def row_possibilities
     #builds arrays that will match up with rows but be their opposite
     @row_possible = Array.new(9) {Array(1..9).to_a}
-    row_checker
+    @row_possible.each_index do |row|
+      @row_possible[row] = @row_possible[row] - (@board[row] & @row_possible[row])
+    end
     p @row_possible
   end
 
