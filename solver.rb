@@ -134,6 +134,10 @@ class SudokuSolver
 
 end
 
+def foo
+  puts "testing git plugin with chase_branch push"
+end
+
 
 # game = SudokuSolver.new
 # p game.row_possible
