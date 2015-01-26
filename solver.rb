@@ -107,7 +107,20 @@ class SudokuSolver
       box_checker
       return @board[row][column]
     else
+      @board[row][column] = @possibilities
       return @possibilities #prints numbers that are possible for row, column, box
+    end
+  end
+
+  def check_row
+    @board.each do |line|
+      line.keep_if do |cell|
+        i = 0
+        while i < 9
+          p cell == @board[line][i]
+          i += 1
+        end
+      end
     end
   end
 
@@ -140,7 +153,7 @@ p game.col_possible[8]
 p game.box_possible[5]
 p game.spot_possible(0,0) == 5
 p game.spot_possible(0,2) == [1,2,3]  #=> I solved this and the solution here is 3.  we need to check this array against other rows now to get rid of the 1 and 2
-
+p game.check_row
 p game.board
 
 # Here is where I am calling it quits for the night. If you decide to pick up
