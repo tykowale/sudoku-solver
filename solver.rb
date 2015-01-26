@@ -122,6 +122,10 @@ class SudokuSolver
 
 end
 
+def foo
+  puts "this is a test for git"
+end
+
 game = SudokuSolver.new
 p game.row_possible
 1000.times {game.solver}
