@@ -14,14 +14,16 @@
 # -------------
 
 # formula for figuring out what box you are in:
-# ((Row# % 3)*3) + (Col# % 3)
+# Using ruby's floor division
+# ((Row# / 3)*3) + (Col# / 3)
 # so if you are at [3][5]
-# (3%3)*3 + (5%3)
+# (3/3)*3 + (5/3)
 # (1*3) + 1 = 4
 
 
 
 class SudokuSolver
+  attr_reader :board
 
   def initialize
     f = File.open("./sudoku.txt")
@@ -51,10 +53,13 @@ class SudokuSolver
     p @row_possible
   end
 
+# So this is some shit... It works most of the time but there are a few columns where
+# it doesn't work properly. I can't figure that out right now but it is really bugging
+# me.
   def col_possibilities
     @col_possible = Array.new(9) {Array(1..9).to_a}
-    9.times do |col|
-      @col_possible.each_index do |row|
+    9.times do |row|
+      @col_possible.each_index do |col|
         @col_possible[col] = @col_possible[col] - (Array(@board[row][col]) & @col_possible[col])
       end
     end
@@ -63,26 +68,36 @@ class SudokuSolver
 
 #This motherfucker right here....
 # Look above to check out the formula to take in each (row, column) cordinate to figure
-# out which box it belongs in and how to reduce it from there. I cant really figure
-# it out and I'm gonna call this it for now...
+# out which box it belongs in and how to reduce it from there. It works for like
+# half the boxes which I think is either an issue how the formula is working or
+# when converting the item to an array
   def box_possibilities
     @box_possible = Array.new(9) {Array(1..9).to_a}
-    9.times do |col|
-      @box_possible.each_index do |row|
-        @box_possible[box_number(row, col)] = @box_possible[col] - (Array(@board[row][col]) & @box_possible[col])
+    9.times do |row|
+      @box_possible.each_index do |col|
+        @box_possible[box_number(row, col)] = @box_possible[box_number(row, col)] - (Array(@board[row][col]) & @box_possible[box_number(row, col)])
       end
     end
     p @box_possible
   end
 
   def box_number(row, column)
-    @box_num = ((row % 3) * 3 ) + (column % 3)
+    @box_num = ((row / 3) * 3 ) + (column / 3)
   end
 
 
 end
 
-# SudokuSolver.new.col_possibilities
-# puts
-# SudokuSolver.new.row_possibilities
-SudokuSolver.new.box_possibilities
+game = SudokuSolver.new
+
+puts 'board'
+p game.board
+puts
+puts 'Column'
+game.col_possibilities
+puts
+puts 'Row'
+game.row_possibilities
+puts
+puts 'Box'
+game.box_possibilities
