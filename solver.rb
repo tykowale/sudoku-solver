@@ -9,11 +9,14 @@
 
 class SudokuSolver
   attr_reader :board, :col_possible, :row_possible, :box_possible
-  
-  def initialize
+  attr_accessor :solved
+
+  def initialize(solved=false)
     @row_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9] ...these will change
     @col_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9]
     @box_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9]
+    @solved = solved
+
     f = File.open("./sudoku.txt")
     f_lines = f.read.split("\n")
     f_lines.each do |line|  #gets rid of borders and puts 0s in empty cells
@@ -73,12 +76,25 @@ class SudokuSolver
     9.times do |row|
       9.times do |col|
         if @board[row][col].is_a?(Array)
-          @board[row][col] =  @board[row][col].sample  #chooses one possibility at random
+          @board[row][col] =  @board[row][col].pop  #chooses one possibility at random
           break
         end
       end #col
     end #row
   end
+
+  # def guesser(solved)
+  #   until @solved == true
+  #     9.times do |row|
+  #       9.times do |col|
+  #         if @board[row][col].is_a?(Array)
+  #           @board[row][col] =  @board[row][col].sample  #chooses one possibility at random
+  #           break
+  #         end
+  #       end #col
+  #     end #row
+  #   end
+  # end
 
   def marker
     9.times do |row|
@@ -88,13 +104,26 @@ class SudokuSolver
     end
   end
 
-  def check_for_win
-    @board.each do |row|
-      if row.uniq.length == 9
-        game.solved = true
-      end
-    end
+  # def checker
+  #   @board.each do |row|
+  #     if row.uniq.length == 9
+  #       solved = true
+  #     end
+  #   end
+  # end
+
+  # def play
+  #   until solved
+  #     marker
+  #     guesser
+  #     checker
+  #   end
+  # end
+
+  def win?
+    
   end
+
 
 end  #end SudokuSolver
 
@@ -106,8 +135,9 @@ p game.col_checker[0] == [2,3,6,8,9]
 p game.box_checker[1] == [1,2,4,6,7,9]  #this is confusing me
 
 ########### Display ############
-game.marker 
+game.marker
 p game.board
 game.guesser
 p game.board
-
+p game.play
+p game.board
