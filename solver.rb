@@ -1,10 +1,4 @@
-# How I currently have this all planned out -
-# Have array that keeps track of all needed numbers for each row, column, and box
-# Iterate over each spot and check if there is only one possible solution
-#   if there is replace it with that number
-#   if not move onto the next one
-#   if no item in the entire board is changed end the program
-# For boxes I have it counted out like this
+# For boxes I have it counted out like this:
 # -------------
 # | 0 | 1 | 2 |
 # -------------
@@ -13,62 +7,46 @@
 # | 6 | 7 | 8 |
 # -------------
 
-# formula for figuring out what box you are in:
-# Using ruby's floor division
-# ((Row# / 3)*3) + (Col# / 3)
-# so if you are at [3][5]
-# (3/3)*3 + (5/3)
-# (1*3) + 1 = 4
-
-
 class SudokuSolver
   attr_reader :board, :col_possible, :row_possible, :box_possible
+  attr_accessor :solved
 
-  def initialize
+  def initialize(solved=false)
+    @row_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9] ...these will change
+    @col_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9]
+    @box_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9]
+    @solved = solved
+
     f = File.open("./sudoku.txt")
     f_lines = f.read.split("\n")
-    f_lines.each do |line|
+    f_lines.each do |line|  #gets rid of borders and puts 0s in empty cells
       line.gsub!('+', '')
       line.gsub!('-', '')
       line.gsub!('|', '')
       line.gsub!('     ', '000')
       line.gsub!('  ', '0')
-      line.gsub!(/\s+/, '')
+      line.gsub!(/\s+/, '')  #cuts down excessive white space to single spaces
     end
 
     @board = []
-    f_lines.each do |line|
+    f_lines.each do |line|  #pushes cleaned up file lines into arrays
       if line.size > 0
         @board.push(line.chars.map(&:to_i))
       end
     end
-    array_possibilities
+  end #initialize
+
+  def box_number(row, column)
+    @box_num = ((row / 3) * 3 ) + (column / 3)
   end
 
-  def array_possibilities
-    @row_possible = Array.new(9) {Array(1..9).to_a}
-    @col_possible = Array.new(9) {Array(1..9).to_a}
-    @box_possible = Array.new(9) {Array(1..9).to_a}
-    row_checker
-    col_checker
-    box_checker
+  def row_checker  #checks all possible solutions in a row
+    @row_possible.each_index {|row| @row_possible[row] = @row_possible[row] - (@board[row] & @row_possible[row])}
   end
 
-  def row_checker
-    @row_possible.each_index do |row|
-      @row_possible[row] = @row_possible[row] - (@board[row] & @row_possible[row])
-    end
+  def col_checker  #checks all possible solutions in a column
+    @col_possible.each_index {|col| @col_possible[col] = @col_possible[col] - (Array(@board.transpose[col]) & @col_possible[col])}
   end
-
-
-  def col_checker
-    9.times do |row|
-      @col_possible.each_index do |col|
-        @col_possible[col] = @col_possible[col] - (Array(@board[row][col]) & @col_possible[col])
-      end
-    end
-  end
-
 
   def box_checker
     9.times do |row|
@@ -76,29 +54,13 @@ class SudokuSolver
         @box_possible[box_number(row, col)] = @box_possible[box_number(row, col)] - (Array(@board[row][col]) & @box_possible[box_number(row, col)])
       end
     end
+    @box_possible
   end
 
-  def box_number(row, column)
-    @box_num = ((row / 3) * 3 ) + (column / 3)
-  end
-
-  def reduce
-    #row.each_index
-    # col.each_index
-    #   if (row_possible & col_possible & box_possible).size == 1
-    #     @board[r][c] is that number
-    #   else if (row_possible & col_possible & box_possible).size == 1
-    #     games impossible and break
-    #   else
-    #     next
-    #have counter going to make sure at least one thing is changed per go around,
-    #if not end it and say it can't be solved
-  end
-
-  def spot_possible(row, column)  #checks possible solutions for specific spot on board
+  def cell_checker(row, column)  #checks all possible solutions for specific spot on board
     @possibilities = (@row_possible[row] & @col_possible[column] & @box_possible[box_number(row,column)])
 
-    if @board[row][column] != 0  #if spot isn't empty...
+    if @board[row][column] != 0  #if spot isn't 0...
       return @board[row][column] = @board[row][column]  #returns itself
     elsif @possibilities.length == 1
       @board[row][column] = @possibilities[0]
@@ -108,86 +70,110 @@ class SudokuSolver
       return @board[row][column]
     else
       @board[row][column] = @possibilities
-      return @possibilities #prints numbers that are possible for row, column, box
     end
   end
 
-  def check_row
-    @board.each do |line|
-      line.keep_if do |cell|
-        i = 0
-        while i < 9
-          p cell == @board[line][i]
-          i += 1
-        end
-      end
-    end
-  end
-
-  def solver
+  def guesser  #insterts a guess when a cell has multiple possibilities
     9.times do |row|
       9.times do |col|
-        spot_possible(row, col)
+        if @board[row][col].is_a?(Array)
+          @board[row][col] =  @board[row][col].pop  #chooses one possibility at random
+          break
+        end
+      end #col
+    end #row
+  end
+
+  # def guesser(solved)
+  #   until @solved == true
+  #     9.times do |row|
+  #       9.times do |col|
+  #         if @board[row][col].is_a?(Array)
+  #           @board[row][col] =  @board[row][col].sample  #chooses one possibility at random
+  #           break
+  #         end
+  #       end #col
+  #     end #row
+  #   end
+  # end
+
+  def marker
+    9.times do |row|
+      9.times do |col|
+        cell_checker(row, col)
       end
     end
   end
 
-end
+  # def checker
+  #   @board.each do |row|
+  #     if row.uniq.length == 9
+  #       solved = true
+  #     end
+  #   end
+  # end
+
+  # def play
+  #   until solved
+  #     marker
+  #     guesser
+  #     checker
+  #   end
+  # end
 
 
-# game = SudokuSolver.new
-# p game.row_possible
-# 1000.times {game.solver}
-# p game.row_possible
-# p game.col_possible[8]
-# p game.box_possible[5]
-# p game.spot_possible(0,0) == 5
-# p game.spot_possible(0,2) == [1,2,3]  #=> I solved this and the solution here is 3.  we need to check this array against other rows now to get rid of the 1 and 2
+
+  def show_row
+    @board.each {|row| row}
+  end
+
+  def show_col
+    @board.transpose.each {|col| col}
+  end
+
+  def show_box
+    @box_array = Array.new(9){[]}
+    9.times do |row|
+      9.times do |col|
+        @box_array[box_number(row, col)] << @board[row][col]
+      end
+    end
+  end
+
+  def win?
+    show_box
+    winner = []
+    @box_array.each_index do |box|
+      winner << @box_array[box].inject(:+)
+    end
+    show_row.each_index do |row|
+      winner <<  show_row[row].inject(:+)
+    end
+    show_col.each_index do |col|
+      winner << show_col[col].inject(:+)
+    end
+    return winner.all? {|num| num == 45}
+  end
 
 
+end  #end SudokuSolver
+
+############  All tests should return true.  #############
 game = SudokuSolver.new
-p game.row_possible
-1000.times {game.solver}
-p game.row_possible
-p game.col_possible[8]
-p game.box_possible[5]
-p game.spot_possible(0,0) == 5
-p game.spot_possible(0,2) == [1,2,3]  #=> I solved this and the solution here is 3.  we need to check this array against other rows now to get rid of the 1 and 2
-p game.check_row
-p game.board
 
-# Here is where I am calling it quits for the night. If you decide to pick up
-# everything is working as is intended right now but the changes I need to make for
-# reusability and clarity purposes for what is written are as follows -
-# 1. Change the function structure
-#   Have an array_possibilites builder function
-#   Have a row_check, column_check, box_check function
-# 2. Change the naming to make more sense
-# 3. Clean up the initialize statement and seperate it into a builder function?
+# p game.row_checker[1] == [1,2,4,6,7,8,9]
+# p game.col_checker[0] == [2,3,6,8,9]
+# p game.box_checker[1] == [1,2,4,6,7,9]
 
-
-# puts 'board'
+########### Display ############
+# game.marker
 # p game.board
-# puts
+# game.guesser
+# p game.board
+# p game.play
+# p game.board
 
-# puts 'Column'
-# p game.col_possible
-# puts
-
-# puts 'Row'
-# p game.row_possible
-# puts
-
-# puts 'Box'
-# p game.box_possible
-# puts
-
-
-
-
-
-
-
-
-
-
+# p game.show_row
+# p game.show_col
+# p game.show_box
+p game.win?
