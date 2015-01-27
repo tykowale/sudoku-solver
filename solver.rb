@@ -54,6 +54,7 @@ class SudokuSolver
         @box_possible[box_number(row, col)] = @box_possible[box_number(row, col)] - (Array(@board[row][col]) & @box_possible[box_number(row, col)])
       end
     end
+    @box_possible
   end
 
   def cell_checker(row, column)  #checks all possible solutions for specific spot on board
@@ -121,7 +122,27 @@ class SudokuSolver
   # end
 
   def win?
-    
+    show_box.each do |box|
+      box.inject(:+)
+    end
+  end
+
+  def show_row
+    @board.each {|row| row}
+  end
+
+  def show_col
+    @board.transpose.each {|col| col}
+  end
+
+  def show_box
+    box_array = Array.new(9){[]}
+    9.times do |row|
+      9.times do |col|
+        box_array[box_number(row, col)] << @board[row][col]
+      end
+    end
+    box_array
   end
 
 
@@ -130,14 +151,19 @@ end  #end SudokuSolver
 ############  All tests should return true.  #############
 game = SudokuSolver.new
 
-p game.row_checker[1] == [1,2,4,6,7,8,9]
-p game.col_checker[0] == [2,3,6,8,9]
-p game.box_checker[1] == [1,2,4,6,7,9]  #this is confusing me
+# p game.row_checker[1] == [1,2,4,6,7,8,9]
+# p game.col_checker[0] == [2,3,6,8,9]
+# p game.box_checker[1] == [1,2,4,6,7,9]
 
 ########### Display ############
-game.marker
-p game.board
-game.guesser
-p game.board
-p game.play
-p game.board
+# game.marker
+# p game.board
+# game.guesser
+# p game.board
+# p game.play
+# p game.board
+
+# p game.show_row
+# p game.show_col
+# p game.show_box
+p game.win?
