@@ -54,7 +54,7 @@ class SudokuSolver
     end
   end
 
-  def marker(row, column)  #checks all possible solutions for specific spot on board
+  def cell_checker(row, column)  #checks all possible solutions for specific spot on board
     @possibilities = (@row_possible[row] & @col_possible[column] & @box_possible[box_number(row,column)])
 
     if @board[row][column] != 0  #if spot isn't 0...
@@ -70,15 +70,26 @@ class SudokuSolver
     end
   end
 
-  def solver
+  def guesser  #insterts a guess when a cell has multiple possibilities
     9.times do |row|
       9.times do |col|
-        marker(row, col)
+        if @board[row][col].is_a?(Array)
+          @board[row][col] =  @board[row][col].sample  #chooses one possibility at random
+          break
+        end
+      end #col
+    end #row
+  end
+
+  def marker
+    9.times do |row|
+      9.times do |col|
+        cell_checker(row, col)
       end
     end
   end
 
-end
+end  #end SudokuSolver
 
 ############  All tests should return true.  #############
 game = SudokuSolver.new
@@ -88,5 +99,8 @@ p game.col_checker[0] == [2,3,6,8,9]
 p game.box_checker[1] == [1,2,4,6,7,9]  #this is confusing me
 
 ########### Display ############
-1000.times{game.solver}
+game.marker 
 p game.board
+game.guesser
+p game.board
+
