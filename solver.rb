@@ -73,29 +73,26 @@ class SudokuSolver
     end
   end
 
-  def guesser  #insterts a guess when a cell has multiple possibilities
+  # def guesser  #insterts a guess when a cell has multiple possibilities
+  #   9.times do |row|
+  #     9.times do |col|
+  #       if @board[row][col].is_a?(Array)
+  #         @board[row][col] =  @board[row][col].pop  #chooses one possibility at random
+  #         break
+  #       end
+  #     end #col
+  #   end #row
+  # end
+
+  def guesser
     9.times do |row|
       9.times do |col|
         if @board[row][col].is_a?(Array)
-          @board[row][col] =  @board[row][col].pop  #chooses one possibility at random
-          break
+          @board[row][col] =  @board[row][col].sample  #chooses one possibility at random
         end
       end #col
     end #row
   end
-
-  # def guesser(solved)
-  #   until @solved == true
-  #     9.times do |row|
-  #       9.times do |col|
-  #         if @board[row][col].is_a?(Array)
-  #           @board[row][col] =  @board[row][col].sample  #chooses one possibility at random
-  #           break
-  #         end
-  #       end #col
-  #     end #row
-  #   end
-  # end
 
   def marker
     9.times do |row|
@@ -104,24 +101,6 @@ class SudokuSolver
       end
     end
   end
-
-  # def checker
-  #   @board.each do |row|
-  #     if row.uniq.length == 9
-  #       solved = true
-  #     end
-  #   end
-  # end
-
-  # def play
-  #   until solved
-  #     marker
-  #     guesser
-  #     checker
-  #   end
-  # end
-
-
 
   def show_row
     @board.each {|row| row}
@@ -155,6 +134,13 @@ class SudokuSolver
     return winner.all? {|num| num == 45}
   end
 
+  def valid?
+    @board.any? {|x| x = []}
+  end
+
+
+
+
 
 end  #end SudokuSolver
 
@@ -168,12 +154,11 @@ game = SudokuSolver.new
 ########### Display ############
 # game.marker
 # p game.board
-# game.guesser
-# p game.board
-# p game.play
-# p game.board
+
+
 
 # p game.show_row
 # p game.show_col
 # p game.show_box
+p game.valid?
 p game.win?
