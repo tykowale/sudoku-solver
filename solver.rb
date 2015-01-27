@@ -121,11 +121,7 @@ class SudokuSolver
   #   end
   # end
 
-  def win?
-    show_box.each do |box|
-      box.inject(:+)
-    end
-  end
+
 
   def show_row
     @board.each {|row| row}
@@ -136,13 +132,27 @@ class SudokuSolver
   end
 
   def show_box
-    box_array = Array.new(9){[]}
+    @box_array = Array.new(9){[]}
     9.times do |row|
       9.times do |col|
-        box_array[box_number(row, col)] << @board[row][col]
+        @box_array[box_number(row, col)] << @board[row][col]
       end
     end
-    box_array
+  end
+
+  def win?
+    show_box
+    winner = []
+    @box_array.each_index do |box|
+      winner << @box_array[box].inject(:+)
+    end
+    show_row.each_index do |row|
+      winner <<  show_row[row].inject(:+)
+    end
+    show_col.each_index do |col|
+      winner << show_col[col].inject(:+)
+    end
+    return winner.all? {|num| num == 45}
   end
 
 
