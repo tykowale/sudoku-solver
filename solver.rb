@@ -9,12 +9,11 @@
 
 class SudokuSolver
   attr_reader :board, :col_possible, :row_possible, :box_possible
-
+  
   def initialize
     @row_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9] ...these will change
     @col_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9]
     @box_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9]
-
     f = File.open("./sudoku.txt")
     f_lines = f.read.split("\n")
     f_lines.each do |line|  #gets rid of borders and puts 0s in empty cells
@@ -85,6 +84,14 @@ class SudokuSolver
     9.times do |row|
       9.times do |col|
         cell_checker(row, col)
+      end
+    end
+  end
+
+  def check_for_win
+    @board.each do |row|
+      if row.uniq.length == 9
+        game.solved = true
       end
     end
   end
