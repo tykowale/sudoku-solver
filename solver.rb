@@ -39,15 +39,11 @@ class SudokuSolver
   end
 
   def row_checker  #checks all possible solutions in a row
-    @row_possible.each_index do |row|
-      @row_possible[row] = @row_possible[row] - (@board[row] & @row_possible[row])
-    end
+    @row_possible.each_index {|row| @row_possible[row] = @row_possible[row] - (@board[row] & @row_possible[row])}
   end
 
   def col_checker  #checks all possible solutions in a column
-    @col_possible.each_index do |col|
-      @col_possible[col] = @col_possible[col] - (Array(@board.transpose[col]) & @col_possible[col])
-    end
+    @col_possible.each_index {|col| @col_possible[col] = @col_possible[col] - (Array(@board.transpose[col]) & @col_possible[col])}
   end
 
   def box_checker
@@ -71,7 +67,6 @@ class SudokuSolver
       return @board[row][column]
     else
       @board[row][column] = @possibilities
-      return @possibilities #prints numbers that are possible for row, column, box
     end
   end
 
@@ -85,7 +80,6 @@ class SudokuSolver
 
 end
 
-
 ############  All tests should return true.  #############
 game = SudokuSolver.new
 
@@ -93,23 +87,6 @@ p game.row_checker[1] == [1,2,4,6,7,8,9]
 p game.col_checker[0] == [2,3,6,8,9]
 p game.box_checker[1] == [1,2,4,6,7,9]  #this is confusing me
 
-
 ########### Display ############
 1000.times{game.solver}
 p game.board
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
