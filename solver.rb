@@ -91,6 +91,25 @@ game = SudokuSolver.new
 
 p game.row_checker[1] == [1,2,4,6,7,8,9]
 p game.col_checker[0] == [2,3,6,8,9]
-p game.box_checker[1] == [1,2,4,6,7,9]
-p game.box_checker
+p game.box_checker[1] == [1,2,4,6,7,9]  #this is confusing me
+
+
+########### Display ############
+1000.times{game.solver}
+p game.board
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
