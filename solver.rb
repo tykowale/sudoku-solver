@@ -8,14 +8,9 @@
 # -------------
 
 class SudokuSolver
-  attr_reader :board, :col_possible, :row_possible, :box_possible
-  attr_accessor :solved
+  attr_reader :board
 
-  def initialize(solved=false)
-    @row_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9] ...these will change
-    @col_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9]
-    @box_possible = Array.new(9) {Array(1..9).to_a}  #[1,2,3,4,5,6,7,8,9]
-    @solved = solved
+  def initialize
 
     f = File.open("./sudoku.txt")
     f_lines = f.read.split("\n")
@@ -31,143 +26,69 @@ class SudokuSolver
     @board = []
     f_lines.each do |line|  #pushes cleaned up file lines into arrays
       if line.size > 0
-        @board.push(line.chars.map(&:to_i))
+        @board.push(line.chars.map {|x| x = x.to_i if x.to_i > 0})
       end
     end
 
-  end #initialize
+  end
 
   def box_number(row, column)
-    @box_num = ((row / 3) * 3 ) + (column / 3)
+    box_num = ((row / 3) * 3 ) + (column / 3)
   end
 
-  def row_checker(row)  #checks all possible solutions in a row
-    @row_possible[row] -= (@board[row] & @row_possible[row])
-  end
-
-  def col_checker(col)  #checks all possible solutions in a column
-    @col_possible[col] -= (Array(@board.transpose[col]) & @col_possible[col])
-  end
-
-  def box_checker
-    9.times do |row|  #iterates every row
-      @box_possible.each_index do |col|  # column
-        @box_possible[box_number(row, col)] -= (Array(@board[row][col]) & @box_possible[box_number(row, col)]) if @board[row][col].is_a?(Integer)
+  def row_col_checker(row, col, value) #returns true if row/column contains value
+    9.times do |cell|
+      if @board[cell][col] == value
+        return true
+        break
+      elsif @board[row][cell] == value
+        return true
+        break
       end
     end
-    @box_possible
+    false
   end
 
-  def cell_checker(row, col)  #checks all possible solutions for specific spot on board
-    @board[row][col] = 0 if @board[row][col].is_a?(Array)
-    @possibilities = (row_checker(row) & col_checker(col) & box_checker[box_number(row,col)])
 
-    if @board[row][col] != 0  #if spot isn't 0...
-      return @board[row][col] = @board[row][col]  #returns itself
-    elsif @possibilities.length == 1
-      @board[row][col] = @possibilities[0]
-      row_checker(row)
-      col_checker(col)
-      box_checker
-      return @board[row][col]
-    else
-      @board[row][col] = @possibilities
-    end
-  end
-
-  def marker
+  def box_checker(row_check, col_check, value) #returns true if box contains value
+    box_array = Array.new(9){[]}
     9.times do |row|
       9.times do |col|
-        cell_checker(row, col)
+        box_array[box_number(row, col)] << @board[row][col] unless @board[row][col] == nil
       end
     end
+    box_array[box_number(row_check % 9,col_check % 9)].include? (value)
   end
 
-  def show_row
-    @board.each {|row| row}
-  end
-
-  def show_col
-    @board.transpose.each {|col| col}
-  end
-
-  def show_box
-    @box_array = Array.new(9){[]}
+  def solver
     9.times do |row|
       9.times do |col|
-        @box_array[box_number(row, col)] << @board[row][col]
-      end
-    end
-  end
+        next if @board[row][col]
+        p @board
 
-  def win?
-    @board.each_index do |row|
-      @board.each_index do |cell|
-        if @board[row][cell].is_a?(Array) || @board[row][cell] == nil
-          return false
+        1.upto(9) do |value|
+
+          next if row_col_checker(row, col, value)
+          next if box_checker(row, col, value)
+
+          @board[row][col] = value
+
+          if solver
+            return true
+          else
+            @board[row][col] = nil
+          end
         end
+        return false
       end
     end
-
-    show_box
-    winner = []
-    @box_array.each_index do |box|
-      winner << @box_array[box].inject(:+)
-    end
-    show_row.each_index do |row|
-      winner <<  show_row[row].inject(:+)
-    end
-    show_col.each_index do |col|
-      winner << show_col[col].inject(:+)
-    end
-    return winner.all? {|num| num == 45}
-
-  end
-
-  def valid?
-    booleans = []
-    @board.each do |row|
-      booleans << row.include?([])
-    end
-    booleans.all? {|element| element == false}
-  end
-
-  def guesser(index)  #insterts a guess when a cell has multiple possibilities
-    array_spot = @board.flatten(1).find_index {|cell| cell.is_a?(Array)}
-    row = array_spot / 9
-    col = array_spot % 9
-    @board[row][col] =  @board[row][col][index]  
-  end
-
-  def play_game(sudoku)
-    marker
-    if win?
-      return sudoku
-    else
-      if valid? == false
-        return nil
-      else
-        guesser(0) || guesser(1) || guesser(2) || guesser(3)
-        return play_game(sudoku)
-      end
-    end
+    true
   end
 
 end  #end SudokuSolver
 
 ############  All tests should return true.  #############
 game = SudokuSolver.new
-# p game.marker
-
-
-# p game.valid?
-p game.play_game(game.board)
-# p game.win?
-# p game.valid?
-# p game.cell_checker(0,1)
-# p game.box_checker[0]
-# p game.row_checker(0)
-# p game.valid?
-
-
-
+p game.board
+p game.solver
+p game.row_col_checker(3,6,5)
