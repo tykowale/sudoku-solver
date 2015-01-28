@@ -44,10 +44,9 @@ class SudokuSolver
       elsif @board[row][cell] == value
         return true
         break
-      else
-        return false
       end
     end
+    return false
   end
 
 
@@ -61,18 +60,9 @@ class SudokuSolver
     @box_array[box_number(row_check % 9,col_check % 9)].include? (value)
   end
 
-  # def solver
+  def solver
 
-        
-    # if box_checker
-    #   break
-    # elsif valid? == false
-    #     return nil
-    #   else
-    #     guesser(0) || guesser(1) || guesser(2) || guesser(3)
-    #     return play_game(sudoku)
-    #   end
-    # end
+
     #iterate row
     #iterate col
     #next if cell is a value (not nil)
