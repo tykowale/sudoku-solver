@@ -149,7 +149,7 @@ class SudokuSolver
         p @board
         return nil
       else
-        guesser(0) | guesser(1) | guesser(-1)
+        guesser(0) | guesser(1)
         return play_game
       end
     end
