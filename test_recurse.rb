@@ -1,7 +1,8 @@
-def find(start = 1, history = '1', goal)
+def find(start, history, goal)
   if start == goal
     return history
   elsif start > goal
+    p history
     return nil
   else
     find(start + 5, "(" + history + " + 5)", goal) ||
@@ -10,4 +11,6 @@ def find(start = 1, history = '1', goal)
 end
 
 
-p find(99)
+p find(1, '1', 9)
+
+
