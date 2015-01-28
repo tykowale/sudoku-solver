@@ -79,35 +79,11 @@ class SudokuSolver
             @board[row][col] = nil
           end
         end
-        false
+        return false
       end
     end
     true
   end
-
-
-  # if box_checker
-  #   break
-  # elsif valid? == false
-  #     return nil
-  #   else
-  #     guesser(0) || guesser(1) || guesser(2) || guesser(3)
-  #     return play_game(sudoku)
-  #   end
-  # end
-  #iterate row
-  #iterate col
-  #next if cell is a value (not nil)
-  #start at 1 upto 9 w/ variable value
-  #check if row/col contain value
-  #check if box contains value
-  #if neither [row][col] = value
-  #return true
-  #at this point it loops back up to the first 'next if' statement
-  #
-  # if solver = true return board
-  #else [row][col] = nil
-
 
 end  #end SudokuSolver
 
