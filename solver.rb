@@ -63,32 +63,29 @@ class SudokuSolver
   def solver
     9.times do |row|
       9.times do |col|
-        next if @board[row][col]
-        p @board
-
+        next if @board[row][col] #skips over cells that contain values
         1.upto(9) do |value|
 
-          next if row_col_checker(row, col, value)
-          next if box_checker(row, col, value)
-
+          next if row_col_checker(row, col, value) #skips current number if value is in row/column
+          next if box_checker(row, col, value) #skips current number if value is in box
           @board[row][col] = value
-
-          if solver
+          if solver #see end of solver where it will return true
             return true
           else
-            @board[row][col] = nil
+            @board[row][col] = nil #heart of the code, forces back tracking
           end
         end
         return false
+
       end
     end
-    true
+    p @board
+    return true
   end
 
 end  #end SudokuSolver
 
-############  All tests should return true.  #############
+############  All tests below this line  #############
 game = SudokuSolver.new
 p game.board
 p game.solver
-p game.row_col_checker(3,6,5)
