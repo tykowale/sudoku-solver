@@ -33,7 +33,7 @@ class SudokuSolver
   end
 
   def box_number(row, column)
-    @box_num = ((row / 3) * 3 ) + (column / 3)
+    box_num = ((row / 3) * 3 ) + (column / 3)
   end
 
   def row_col_checker(row, col, value) #returns true if row/column contains value
@@ -44,21 +44,20 @@ class SudokuSolver
       elsif @board[row][cell] == value
         return true
         break
-      else
-        return false
       end
     end
+    false
   end
 
 
   def box_checker(row_check, col_check, value) #returns true if box contains value
-    @box_array = Array.new(9){[]}
+    box_array = Array.new(9){[]}
     9.times do |row|
       9.times do |col|
-        @box_array[box_number(row, col)] << @board[row][col]
+        box_array[box_number(row, col)] << @board[row][col] unless @board[row][col] == nil
       end
     end
-    @box_array[box_number(row_check % 9,col_check % 9)].include? (value)
+    box_array[box_number(row_check % 9,col_check % 9)].include? (value)
   end
 
   def solver
@@ -68,18 +67,19 @@ class SudokuSolver
         p @board
 
         1.upto(9) do |value|
+
           next if row_col_checker(row, col, value)
           next if box_checker(row, col, value)
 
           @board[row][col] = value
 
           if solver
-            @board
+            return true
           else
             @board[row][col] = nil
           end
-          return false
         end
+        false
       end
     end
     true
@@ -115,3 +115,4 @@ end  #end SudokuSolver
 game = SudokuSolver.new
 p game.board
 p game.solver
+p game.row_col_checker(3,6,5)
