@@ -65,22 +65,24 @@ class SudokuSolver
     9.times do |row|
       9.times do |col|
         next if @board[row][col]
+        p @board
 
         1.upto(9) do |value|
-          next unless (row_col_checker(row, col, value) || box_checker(row, col, value))
+          next if row_col_checker(row, col, value)
+          next if box_checker(row, col, value)
+
           @board[row][col] = value
+
+          if solver
+            @board
+          else
+            @board[row][col] = nil
+          end
+          return false
         end
-        if solver
-          break
-        else
-          @board[row][col] = nil
-        end
-        false
       end
-      true
     end
-
-
+    true
   end
 
 
