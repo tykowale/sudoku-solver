@@ -32,28 +32,47 @@ class SudokuSolver
 
   end
 
+  def box_number(row, column)
+    @box_num = ((row / 3) * 3 ) + (column / 3)
+  end
+
   def row_col_checker(row, col, value) #returns true if row/column contains value
     9.times do |cell|
       if @board[cell][col] == value
-        return false
+        return true
         break
       elsif @board[row][cell] == value
-        return false
+        return true
         break
       else
-        return true
+        return false
       end
     end
   end
 
 
-  def box_checker(row, col, value) #returns true if box contains value
-    #check if box contains value, if it does return true
-
-
+  def box_checker(row_check, col_check, value) #returns true if box contains value
+    @box_array = Array.new(9){[]}
+    9.times do |row|
+      9.times do |col|
+        @box_array[box_number(row, col)] << @board[row][col]
+      end
+    end
+    @box_array[box_number(row_check % 9,col_check % 9)].include? (value)
   end
 
-  def solver
+  # def solver
+
+        
+    # if box_checker
+    #   break
+    # elsif valid? == false
+    #     return nil
+    #   else
+    #     guesser(0) || guesser(1) || guesser(2) || guesser(3)
+    #     return play_game(sudoku)
+    #   end
+    # end
     #iterate row
     #iterate col
     #next if cell is a value (not nil)
@@ -67,9 +86,19 @@ class SudokuSolver
     # if solver = true return board
     #else [row][col] = nil
 
+
 end  #end SudokuSolver
 
 ############  All tests should return true.  #############
 game = SudokuSolver.new
 p game.board
+p game.row_col_checker(0,0,5)
+p game.box_checker(0,0,5)
+p game.box_checker(3,0,1)
+p game.box_checker(6,0,9)
+p game.box_checker(0,3,3)
+
+
+
+
 
