@@ -101,6 +101,14 @@ class SudokuSolver
   end
 
   def win?
+    @board.each_index do |row|
+      @board.each_index do |cell|
+        if @board[row][cell].is_a?(Array) || @board[row][cell] == nil
+          return false
+        end
+      end
+    end
+
     show_box
     winner = []
     @box_array.each_index do |box|
@@ -113,30 +121,36 @@ class SudokuSolver
       winner << show_col[col].inject(:+)
     end
     return winner.all? {|num| num == 45}
+
   end
 
   def valid?
-    @board.any? {|x| x = []}
+    booleans = []
+    @board.each do |row|
+      booleans << row.include?([])
+    end
+    booleans.all? {|element| element == false}
   end
 
-  # def guesser(index)
-  #   @board.each_index do |row|
-  #     @board[row].find_index do |x|
-  #       @board[row][x] = @board[row][x][index] if x.is_a?(Array)
-  #       break
-  #     end
-  #   end
-  #
   def guesser(index)  #insterts a guess when a cell has multiple possibilities
-    9.times do |row|
-      9.times do |col|
-        if @board[row][col].is_a?(Array)
-          @board[row][col] =  @board[row][col][index]  #chooses one possibility at random
-          marker
-          break
-        end
-      end #col
-    end #row
+    array_spot = @board.flatten(1).find_index {|cell| cell.is_a?(Array)}
+    row = array_spot / 9
+    col = array_spot % 9
+    @board[row][col] =  @board[row][col][index]  
+  end
+
+  def play_game(sudoku)
+    marker
+    if win?
+      return sudoku
+    else
+      if valid? == false
+        return nil
+      else
+        guesser(0) || guesser(1) || guesser(2) || guesser(3)
+        return play_game(sudoku)
+      end
+    end
   end
 
 end  #end SudokuSolver
@@ -144,17 +158,16 @@ end  #end SudokuSolver
 ############  All tests should return true.  #############
 game = SudokuSolver.new
 # p game.marker
-p game.board
-p game.marker
-p game.board
-p game.row_checker(0)
-p game.col_checker(0)
-p game.box_checker[0]
+
+
+# p game.valid?
+p game.play_game(game.board)
+# p game.win?
+# p game.valid?
 # p game.cell_checker(0,1)
 # p game.box_checker[0]
 # p game.row_checker(0)
-
-
+# p game.valid?
 
 
 
