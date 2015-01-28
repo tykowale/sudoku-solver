@@ -61,30 +61,50 @@ class SudokuSolver
     @box_array[box_number(row_check % 9,col_check % 9)].include? (value)
   end
 
-  # def solver
+  def solver
+    9.times do |row|
+      9.times do |col|
+        next if @board[row][col]
 
-        
-    # if box_checker
-    #   break
-    # elsif valid? == false
-    #     return nil
-    #   else
-    #     guesser(0) || guesser(1) || guesser(2) || guesser(3)
-    #     return play_game(sudoku)
-    #   end
-    # end
-    #iterate row
-    #iterate col
-    #next if cell is a value (not nil)
-      #start at 1 upto 9 w/ variable value
-        #check if row/col contain value
-        #check if box contains value
-        #if neither [row][col] = value
-        #return true
-        #at this point it loops back up to the first 'next if' statement
-        #
-    # if solver = true return board
-    #else [row][col] = nil
+        1.upto(9) do |value|
+          next unless (row_col_checker(row, col, value) || box_checker(row, col, value))
+          @board[row][col] = value
+        end
+        if solver
+          break
+        else
+          @board[row][col] = nil
+        end
+        false
+      end
+      true
+    end
+
+
+  end
+
+
+  # if box_checker
+  #   break
+  # elsif valid? == false
+  #     return nil
+  #   else
+  #     guesser(0) || guesser(1) || guesser(2) || guesser(3)
+  #     return play_game(sudoku)
+  #   end
+  # end
+  #iterate row
+  #iterate col
+  #next if cell is a value (not nil)
+  #start at 1 upto 9 w/ variable value
+  #check if row/col contain value
+  #check if box contains value
+  #if neither [row][col] = value
+  #return true
+  #at this point it loops back up to the first 'next if' statement
+  #
+  # if solver = true return board
+  #else [row][col] = nil
 
 
 end  #end SudokuSolver
@@ -92,13 +112,4 @@ end  #end SudokuSolver
 ############  All tests should return true.  #############
 game = SudokuSolver.new
 p game.board
-p game.row_col_checker(0,0,5)
-p game.box_checker(0,0,5)
-p game.box_checker(3,0,1)
-p game.box_checker(6,0,9)
-p game.box_checker(0,3,3)
-
-
-
-
-
+p game.solver
