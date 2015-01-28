@@ -136,19 +136,21 @@ class SudokuSolver
     array_spot = @board.flatten(1).find_index {|cell| cell.is_a?(Array)}
     row = array_spot / 9
     col = array_spot % 9
-    @board[row][col] =  @board[row][col][index]  
+    @board[row][col] =  @board[row][col][index]
+    50.times {marker}
   end
 
-  def play_game(sudoku)
+  def play_game
     marker
     if win?
-      return sudoku
+      return @board
     else
       if valid? == false
+        p @board
         return nil
       else
-        guesser(0) || guesser(1) || guesser(2) || guesser(3)
-        return play_game(sudoku)
+        guesser(0) | guesser(1) | guesser(-1)
+        return play_game
       end
     end
   end
@@ -161,7 +163,7 @@ game = SudokuSolver.new
 
 
 # p game.valid?
-p game.play_game(game.board)
+p game.play_game
 # p game.win?
 # p game.valid?
 # p game.cell_checker(0,1)
