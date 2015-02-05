@@ -28,20 +28,26 @@ def next_empty_cell(board)
   location = board.flatten(1).index(nil)
   row = location / 9
   col = location % 9
+  if (row_col_possible_numbers(row, col, board) & box_possible_numbers(row, col, board)).length == 1
+    board[row][col] = (row_col_possible_numbers(row, col, board) & box_possible_numbers(row, col, board))
+    next_empty_cell(board)
+  end
   [row, col]
 end
 
 def guesser(value, board)
-  guesser_cell = next_empty_cell(board)
+  p guesser_cell = next_empty_cell(board)
+  if guesser_cell == nil
+    return board
+  end
   next_row = guesser_cell[0]
   next_col = guesser_cell[1]
   cell_possibilities = (row_col_possible_numbers(next_row, next_col, board) & box_possible_numbers(next_row, next_col, board))
-  if guesser_cell == nil
-    return board
-  elsif cell_possibilities == []
+  if cell_possibilities == []
     return nil
   else
     board[next_row][next_col] = cell_possibilities[value]
+    p board
     guesser(0, board) ||
     guesser(1, board) ||
     guesser(2, board) ||
@@ -49,7 +55,6 @@ def guesser(value, board)
     guesser(4, board) ||
     guesser(5, board)
   end
-
 end
 
 p guesser(2, sudoku)
