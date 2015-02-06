@@ -35,7 +35,7 @@ def next_empty_cell(board)
   [row, col]
 end
 
-def guesser(value, board)
+def guesser(board)
   p guesser_cell = next_empty_cell(board)
   if guesser_cell == nil
     return board
@@ -46,15 +46,14 @@ def guesser(value, board)
   if cell_possibilities == []
     return nil
   else
-    board[next_row][next_col] = cell_possibilities[value]
     p board
-    guesser(0, board) ||
-    guesser(1, board) ||
-    guesser(2, board) ||
-    guesser(3, board) ||
-    guesser(4, board) ||
-    guesser(5, board)
+    guesser(board[next_row][next_col] = cell_possibilities[0]) ||
+    guesser(board[next_row][next_col] = cell_possibilities[1])
+    # guesser(2, board) ||
+    # guesser(3, board) ||
+    # guesser(4, board) ||
+    # guesser(5, board)
   end
 end
 
-p guesser(2, sudoku)
+p guesser(sudoku)
