@@ -23,12 +23,15 @@ class SudokuSolver
       line.gsub!(/\s+/, '')  #cuts down excessive white space to single spaces
     end
 
-    @board = []
-    f_lines.each do |line|  #pushes cleaned up file lines into arrays
-      if line.size > 0
-        @board.push(line.chars.map {|x| x = x.to_i if x.to_i > 0})
-      end
-    end
+    @board = [[1, nil, 5, 8, nil, 2, nil, nil, nil],
+[nil, 9, nil, nil, 7, 6, 4, nil, 5],
+[2, nil, nil, 4, nil, nil, 8, 1, 9],
+[nil, 1, 9, nil, nil, 7, 3, nil, 6],
+[7, 6, 2, nil, 8, 3, nil, 9, nil],
+[nil, nil, nil, nil, 6, 1, nil, 5, nil],
+[nil, nil, 7, 6, nil, nil, nil, 3, nil],
+[4, 3, nil, nil, 2, nil, 5, nil, 1],
+[6, nil, nil, 3, nil, 8, 9, nil, nil]]
 
   end
 

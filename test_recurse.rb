@@ -3,6 +3,7 @@ def find(start, history, goal)
     return history
   elsif start > goal
     p history
+    p "THIS ONE DOESN'T WORK"
     return nil
   else
     find(start + 5, "(" + history + " + 5)", goal) ||
@@ -11,6 +12,6 @@ def find(start, history, goal)
 end
 
 
-p find(1, '1', 9)
+p find(1, '1', 32)
 
 
